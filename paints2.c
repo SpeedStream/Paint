@@ -87,6 +87,9 @@ GLfloat size = 1.0;                             //Tamaño de grosor de dibujo ->
 		glFlush();
 	}
 
+	void userErase(int x, int y){
+
+	}
 /* END FUNCIONES PARA DIBUJAR DEL USUARIO */
 
 void mouse(int button, int state, int x, int y){
