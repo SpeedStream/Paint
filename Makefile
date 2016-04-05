@@ -7,10 +7,10 @@ run:
 	./paint
 
 git:
-	git add .
-	git add -A
-	git commit -m "last"
-	git push
+	$ git add .
+	$ git add -A
+	$ git commit -m "last"
+	$ git push origin master
 
 clean:
 	rm -rf *o paint
