@@ -90,7 +90,8 @@ GLfloat size = 1.0;                             //Tamaño de grosor de dibujo ->
 /* END FUNCIONES PARA DIBUJAR DEL USUARIO */
 
 void mouse(int button, int state, int x, int y){
-	static int draw_mode = 1;
+	//Por default, iniciamos con color negro, tamaño 1.0 y herramienta 6(trazo libre)
+	static int draw_mode = 6;
 	static int count;
 	static int xp[4], yp[4];
 	int where;
@@ -131,23 +132,19 @@ void mouse(int button, int state, int x, int y){
 						if ( fill ) {
 							userDrawSquare(xp, yp, 1.0, 1);
 						} else {
-							//No relleno. Bandera = 0
 							userDrawSquare(xp, yp, size, 0);
 						}
 						count = 0;
 						break;
 					}
 				case 3:     //Dibujamos triángulo
-					//printf("drawMode: %i\n", draw_mode);
 					if(count == 0){
-						//printf("count: %i\n", count);
 						count = 1;
 						xp[0] = x;
 						yp[0] = windowHeight - y;
 						break;
 					}
 					if(count == 1){
-						//printf("count: %i\n", count);
 						count = 2;
 						xp[1] = x;
 						yp[1] = windowHeight - y;
@@ -165,7 +162,6 @@ void mouse(int button, int state, int x, int y){
 					}
 					break;
 				case 4:     //Dibujamos puntos individuales
-					//printf("count: %i\n", count);
 					y = windowHeight - y;
 					userDrawPoints(x, y, size);
 					break;
