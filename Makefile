@@ -8,7 +8,7 @@ run:
 
 git:
 	git add .
-	git add --all
+	git add -A
 	git commit -m "last"
 	git push
 
