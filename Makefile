@@ -6,5 +6,11 @@ compilar:
 run:
 	./paint
 
+git:
+	git add .
+	git add --all
+	git commit -m "last"
+	git push
+
 clean:
 	rm -rf *o paint
