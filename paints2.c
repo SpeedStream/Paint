@@ -42,55 +42,50 @@ GLfloat size = 1.0;                             //Tamaño de grosor de dibujo ->
 
 
 /* FUNCIONES PARA DIBUJAR DEL USUARIO */
-
-//Dibujo de línea
-void userDrawLine(int xp, int yp, int x, int y, GLfloat sizeLine){
-	printf("A dibujar linea...\n");
-	drawLine(xp, yp, x, y, sizeLine);
-}
-void userDrawSquare(int *xp, int *yp, GLfloat sizeLine, int isFill){
-	if(isFill == 1){
-		drawPolygon(4, xp, yp);
+	void userDrawLine(int xp, int yp, int x, int y, GLfloat sizeLine){
+		drawLine(xp, yp, x, y, sizeLine);
 	}
-	else{
-		drawLineLoop(4, xp, yp, sizeLine);
+	void userDrawSquare(int *xp, int *yp, GLfloat sizeLine, int isFill){
+		if(isFill == 1){
+			drawPolygon(4, xp, yp);
+		}
+		else{
+			drawLineLoop(4, xp, yp, sizeLine);
+		}
 	}
-}
-void userDrawTriangle(int *xp, int *yp, GLfloat sizeLine, int isFill){
-	if(isFill == 1){
-		drawPolygon(3, xp, yp);
+	void userDrawTriangle(int *xp, int *yp, GLfloat sizeLine, int isFill){
+		if(isFill == 1){
+			drawPolygon(3, xp, yp);
+		}
+		else{
+			drawLineLoop(3, xp, yp, sizeLine);
+		}
 	}
-	else{
-		drawLineLoop(3, xp, yp, sizeLine);
+	void userDrawPoints(int x, int y, GLfloat sizePoint){
+		glPointSize(sizePoint);
+		glBegin(GL_POINTS);
+		glVertex2f(x ,y);
+		glEnd();
 	}
-}
-void userDrawPoints(int x, int y, GLfloat sizePoint){
-	glPointSize(sizePoint);
-	glBegin(GL_POINTS);
-	glVertex2f(x ,y);
-	glEnd();
-}
-void userDrawCircle(int xp, int yp, GLfloat radio, GLfloat sizeLine, int isFill){
-	if(isFill == 1){
-		//printf("sizeLine: %f\n", sizeLine);
-		drawCircle(xp, yp, radio, 1.0, 1);
+	void userDrawCircle(int xp, int yp, GLfloat radio, GLfloat sizeLine, int isFill){
+		if(isFill == 1){
+			drawCircle(xp, yp, radio, 1.0, 1);
+		}
+		else{
+			drawCircle(xp, yp, radio, sizeLine, 0);
+		}
 	}
-	else{
-		printf("sizeLine: %f\n", sizeLine);
-		drawCircle(xp, yp, radio, sizeLine, 0);
+	void userDrawPencil(int x, int y){
+		glColor3f(red, green, blue);
+		y=windowHeight-y;
+		glBegin(GL_POLYGON);
+		glVertex2f(x+size, y+size);
+		glVertex2f(x-size, y+size);
+		glVertex2f(x-size, y-size);
+		glVertex2f(x+size, y-size);
+		glEnd();
+		glFlush();
 	}
-}
-void userDrawPencil(int x, int y){
-	glColor3f(red, green, blue);
-	y=windowHeight-y;
-	glBegin(GL_POLYGON);
-	glVertex2f(x+size, y+size);
-	glVertex2f(x-size, y+size);
-	glVertex2f(x-size, y-size);
-	glVertex2f(x+size, y-size);
-	glEnd();
-	glFlush();
-}
 
 /* END FUNCIONES PARA DIBUJAR DEL USUARIO */
 
@@ -103,50 +98,37 @@ void mouse(int button, int state, int x, int y){
 	if( button == GLUT_LEFT_BUTTON && state == GLUT_DOWN ) {
 		glPushAttrib( GL_ALL_ATTRIB_BITS );
 		where = pick( x, y );
-		printf("where: %i\n", where);
 		glColor3f( red, green, blue );      //Usa el color actual
 		if ( where != 0 ) {                 //No hay un modo de dibujo seleccionado
-			printf("Iniciando nueva herramienta...\n");
 			count = 0;
 			draw_mode = where;
 			glutMotionFunc(0);          //Cerramos el motion
-			printf("count: %i\n", count);
-			printf("draw_mode: %i\n", draw_mode);
-			printf("- - -- - - -- - - - - - -- - \n");
 		}else if(draw_mode){
 			switch(draw_mode){
 				case 1:     //Dibujamos líneas;
 					if(count == 1){
-						//printf("count != 0?: %i\n", count);
-						//rintf("xp[0]: %i; yp[0]: %i\n", xp[0], yp[0]);
-						//printf("x: %i; y: %i\n", x, y);
 						userDrawLine(xp[0], yp[0], x, windowHeight - y, size);
 						count = 0;
 						break;
 					}
 					if(count == 0){
-						//printf("count == 0?: %i\n", count);
 						count = 1;
 						xp[0] = x;
 						yp[0] = windowHeight - y;
-						//printf("xp[0]: %i; yp[0]: %i\n", xp[0], yp[0]);
 						break;
 					}
 				case 2:     //Dibujamos rectángulo
 					if(count == 0){
-						//printf("count: %i\n", count);
 						count = 1;
 						xp[0] = x;
 						yp[0] = windowHeight - y;
 						break;
 					}
 					if(count != 0){
-						//printf("count: %i\n", count);
 						xp[1] = xp[0]; yp[1] = windowHeight - y;
 						xp[2] = x;     yp[2] = windowHeight - y;
 						xp[3] = x;     yp[3] = yp[0];
 						if ( fill ) {
-							//Hay relleno. Bandera = 1
 							userDrawSquare(xp, yp, 1.0, 1);
 						} else {
 							//No relleno. Bandera = 0
@@ -314,12 +296,7 @@ void screenshot (char filename[160],int x, int y){
 
 	// write header and data to file
 	std::fstream File;
-	//File.open (filename, std::fstream::in | std::fstream::out | std::fstream::app);
 	File.open(filename, std::ios::out | std::ios::binary);
-	//File.write (reinterpret_cast(header), sizeof (char)*18);
-	//File.write (reinterpret_cast(data), sizeof (char)*imageSize);
-	//File.write(reinterpret_cast (header), sizeof(char)*18);
-	//File.write(reinterpret_cast (data), sizeof(char)*imageSize);
 	File.write(reinterpret_cast<char *>(header), sizeof (char)*18);
 	File.write(reinterpret_cast<char *>(data), sizeof (char)*imageSize);
 	File.close();
@@ -418,7 +395,6 @@ void myReshape( GLsizei width, GLsizei height ) {
    glClearColor ( 1.0, 1.0, 1.0, 1.0 );
    glClear( GL_COLOR_BUFFER_BIT );
 
-   //glutPostRedisplay( );
    glFlush( );
 
    /* Establecer el tamaño global para el uso de rutina de dibujo */
@@ -518,7 +494,7 @@ void display( void ) {
 	glEnd( );
 
 	/***Punto para dibujado de punto***/
-	//glPointSize( 3.0 );
+	glPointSize( 10.0 );
 	glBegin( GL_POINTS );
 	glVertex2i( 105,20 );
 	glEnd( );
@@ -529,7 +505,6 @@ void display( void ) {
 	drawCircle(135,25,10, 1.0, 0);
 
 	/***Lapiz para dibujado a mano***/
-	//glPointSize( sizeD );
 	drawCircle(165,25,10, 1.0,0);
 
 	/*END DIBUJOS EN CUADROS DE HERRAMIENTAS*/

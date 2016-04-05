@@ -7,4 +7,4 @@ run:
 	./paint
 
 clean:
-	rm -rf *o
+	rm -rf *o paint
