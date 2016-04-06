@@ -114,7 +114,7 @@ void mouse(int button, int state, int x, int y){
 		if ( where != 0 ) {                 //No hay un modo de dibujo seleccionado
 			count = 0;
 			draw_mode = where;
-			glutMotionFunc(0);          //Cerramos el motion
+			glutMotionFunc(0);          	//Cerramos el motion
 		}else if(draw_mode){
 			switch(draw_mode){
 				case 1:     //Dibujamos líneas;
