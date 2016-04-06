@@ -30,7 +30,8 @@ void drawCircle(GLfloat, GLfloat, GLfloat, GLfloat, int);
 	void userDrawSquare(int [], int [], GLfloat, int);
 	void userDrawTriangle(int [], int [], GLfloat, int);
 	void userDrawCircle(int, int, GLfloat, GLfloat, int);
-	void userDrawPencil(int, int, GLfloat);
+	void userDrawPencil(int, int);
+	void userErase(int, int);
 /*  END Funciones para dibujar del usuario */
 
 /***	Variables Globales	***/
@@ -86,9 +87,16 @@ GLfloat size = 1.0;                             //Tamaño de grosor de dibujo ->
 		glEnd();
 		glFlush();
 	}
-
 	void userErase(int x, int y){
-
+		glColor3f(1.0, 1.0, 1.0);
+		y=windowHeight-y;
+		glBegin(GL_POLYGON);
+		glVertex2f(x+10.0, y+10.0);
+		glVertex2f(x-10.0, y+10.0);
+		glVertex2f(x-10.0, y-10.0);
+		glVertex2f(x+10.0, y-10.0);
+		glEnd();
+		glFlush();
 	}
 /* END FUNCIONES PARA DIBUJAR DEL USUARIO */
 
@@ -197,6 +205,10 @@ void mouse(int button, int state, int x, int y){
 					userDrawPencil(x, y);
 					glutMotionFunc(userDrawPencil);
 					break;
+				case 7:
+				printf("Borrador\n");
+					userErase(x, y);
+					glutMotionFunc(userErase);
 			}
 		}
 		glPopAttrib();
@@ -264,22 +276,24 @@ void drawLineLoop( int n, int *x, int *y, GLfloat sizeLine) {
 
 /***	Seleccion de la herramienta a dibujar	***/
 int pick( int x, int y ) {
-   if ( y < 40 ) 	//No se dibuja nada PANEL HERRAMIENTAS
-	  return 0;  
-   else if ( x < 30 && x > 0)            		//Dibuja Linea
-	  return 1;  
-   else if ( x < 60 && x > 30)             		//Dibuja Rectángulo
-	  return 2;  
-   else if ( x < 90 && x > 60)         			//Dibuja Triángulo
-	  return 3;  
-   else if ( x < 120 && x > 90)          		//Dibuja Punto
-	  return 4; 
-   else if ( x < 150 && x > 120)				//Dibuja Circulo
-	  return 5;
-   else if ( x < 180 && x > 150)                //Dibuja con lapiz
-	  return 6;
-   else 										//Nada que dibujar
-	  return 0; 
+	if ( y < 40 ) 	//No se dibuja nada PANEL HERRAMIENTAS
+		return 0;  
+	else if ( x < 30 && x > 0)            		//Dibuja Linea
+		return 1;  
+	else if ( x < 60 && x > 30)             	//Dibuja Rectángulo
+		return 2;  
+	else if ( x < 90 && x > 60)         		//Dibuja Triángulo
+		return 3;  
+	else if ( x < 120 && x > 90)          		//Dibuja Punto
+		return 4; 
+	else if ( x < 150 && x > 120)				//Dibuja Circulo
+		return 5;
+	else if ( x < 180 && x > 150)               //Dibuja con lapiz
+		return 6;
+	else if ( x < 210 && x > 180)				//Borrador
+		return 7;
+	else 										//Nada que dibujar
+		return 0; 
 }
 
 /***	Guarda la imagen	***/ //FALTA REVISAR FORMATO
@@ -354,7 +368,6 @@ void menu_relleno( int id ) {
 }
 
 void menu_size( int id){
-	printf("Actual size: %f\n", size);
 	if( id == 0){
 		size = size * 2;
 	}
@@ -363,7 +376,12 @@ void menu_size( int id){
 			size = size / 2;
 		}
 	}
-	printf("New size: %f\n", size);
+}
+
+void menu_linea(int id){
+	if ( id == 0){
+		//Línea contínua
+	}
 }
 
 /***    Dibuja las cajas que representan las opciones a elegir para dibujar ***/
@@ -468,6 +486,10 @@ void display( void ) {
 	/*** Herramienta de dibujar a mano***/
 	glColor3f( 0.5, 0.7, 0.3 );
 	screen_box( 150,10,30 );
+
+	/*** Herramienta de borrador***/
+	glColor3f( 0.9, 0.2, 0.7 );
+	screen_box( 180,10,30 );
 	/*END CUADROS DE HERRAMIENTAS*/
 
 	glColor3f( 0.0, 0.0, 0.0 );
@@ -505,6 +527,10 @@ void display( void ) {
 
 	/***Lapiz para dibujado a mano***/
 	drawCircle(165,25,10, 1.0,0);
+
+	/**** Cuadrado para borrador ****/
+	glColor3f( 1.0, 1.0, 1.0 );
+	screen_box( 183,13,24 );
 
 	/*END DIBUJOS EN CUADROS DE HERRAMIENTAS*/
 
