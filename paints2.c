@@ -205,10 +205,10 @@ void mouse(int button, int state, int x, int y){
 					userDrawPencil(x, y);
 					glutMotionFunc(userDrawPencil);
 					break;
-				case 7:
-				printf("Borrador\n");
+				case 7:		//Utilizamos borrador
 					userErase(x, y);
 					glutMotionFunc(userErase);
+					break;
 			}
 		}
 		glPopAttrib();
@@ -250,7 +250,6 @@ void drawLine( int x1, int y1, int x2, int y2, GLfloat sizeLine) {
 }
 
 void drawCircle(GLfloat x, GLfloat y, GLfloat radius, GLfloat sizeLine, int fill){
-	printf("sizeLine: %f\n", sizeLine);
 	int i;
 	int lineAmount = 100; //# of triangles used to draw circle
 	GLfloat twicePi = 2.0f * PI;
@@ -379,8 +378,23 @@ void menu_size( int id){
 }
 
 void menu_linea(int id){
-	if ( id == 0){
-		//Línea contínua
+	switch(id){
+		case 0:
+			//Línea contínua
+			printf("Linea contínua\n");
+			break;
+		case 1:
+			//Línea punteada
+			printf("Linea punteada\n");
+			break;
+		case 2:
+			printf("Linea rayada\n");
+			break;
+		case 3:
+			printf("Linea combinada\n");
+			break;
+		default:
+			menu_linea(0);
 	}
 }
 
@@ -543,7 +557,7 @@ void display( void ) {
 *******************************************/
 int main( int argc, char** argv ) {
 
-	int c_menu, f_menu, s_menu;
+	int c_menu, f_menu, s_menu, l_menu;
 
 	glutInit( &argc, argv );
 	glutInitDisplayMode( GLUT_SINGLE | GLUT_RGB );
@@ -576,11 +590,19 @@ int main( int argc, char** argv ) {
    glutAddMenuEntry( "Relleno Encendido", 1 );
    glutAddMenuEntry( "Relleno Apagado", 2 );
 
+   /*	Crea el submenú de tipo de línea 	*/
+   l_menu = glutCreateMenu (menu_linea);
+   glutAddMenuEntry("Continua _________", 0);
+   glutAddMenuEntry("Punteada . . . . .", 1);
+   glutAddMenuEntry("Rayada   - - - - -", 2);
+   glutAddMenuEntry("Combinada - . - . -", 3);
+
    /*** Crea Menu con click derecho	***/
    glutCreateMenu( menu_derecho );
    glutAddSubMenu( "Colores", c_menu );
    glutAddSubMenu( "Relleno", f_menu );
    glutAddSubMenu ( "Size", s_menu);
+   glutAddSubMenu ( "Tipo de linea", l_menu);
    glutAddMenuEntry( "Borrar", 2 );
    glutAddMenuEntry( "Quitar",  1 );
    glutAddMenuEntry( "Guardar",  3 );
