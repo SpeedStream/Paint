@@ -381,15 +381,19 @@ void menu_linea(int id){
 	switch(id){
 		case 0:
 			//Línea contínua
+			glDisable(GL_LINE_STIPPLE);
 			printf("Linea contínua\n");
-			
 			break;
 		case 1:
 			//Línea punteada
 			printf("Linea punteada\n");
+			glEnable (GL_LINE_STIPPLE);
+			glLineStipple (1, 0x0101);
 			break;
 		case 2:
 			printf("Linea rayada\n");
+			glEnable (GL_LINE_STIPPLE);
+			glLineStipple (1, 0x00FF);
 			break;
 		case 3:
 			printf("Linea combinada\n");
