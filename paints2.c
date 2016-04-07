@@ -382,6 +382,7 @@ void menu_linea(int id){
 		case 0:
 			//Línea contínua
 			printf("Linea contínua\n");
+			
 			break;
 		case 1:
 			//Línea punteada
